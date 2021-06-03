@@ -37,12 +37,26 @@ function draw() {
   background(46,139,87);
   foodObj.display();
 
-  var fedTime = database.ref('FeedTime');
+  var fedTime = database.ref('lastFedTime');
   fedTime.on("value", function(data){ 
-    lastFed = data.val(); 
+    lastFed = data.val();
   });
-  
-  Texts();
+
+  fedTime.database.ref('/').update({
+    lastFedTime:hour()
+  })
+
+  fill(255,255,254);
+  textSize(15);
+  if(lastFed >= 12){
+    text("Last Feed: ", + lastFed%12 + " PM",350,30);
+  }
+  else if(lastFed === 0){
+    text("Last Feed: 12 AM",350,30);
+  }else{
+    text("Last Feed: " + lastFed + " AM",350,30);
+  }
+
   drawSprites();
 }
 
@@ -62,7 +76,6 @@ function feedDog(){
 
   database.ref('/').update({
     Food:foodObj.getFoodStock(),
-    fedTime:hour()
   });
 }
 
@@ -71,10 +84,4 @@ function addFoods(){
   database.ref('/').update({
     Food:foodS
   });
-}
-
-function Texts(){
-  fill ("white"); 
-  textSize(15);
-  text("Last feed: 12 AM",350,30)
 }
