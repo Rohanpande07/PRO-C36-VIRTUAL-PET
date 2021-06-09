@@ -5,7 +5,6 @@ var foodObj;
 var canvas;
 var feed, lastFed;
 
-
 function preload(){
   sadDog=loadImage("Dog.png");
   happyDog=loadImage("happy dog.png");
@@ -37,19 +36,19 @@ function draw() {
   background(46,139,87);
   foodObj.display();
 
-  var fedTime = database.ref('lastFedTime');
+  var fedTime = database.ref('lastFed');
   fedTime.on("value", function(data){ 
     lastFed = data.val();
   });
 
-  fedTime.database.ref('/').update({
-    lastFedTime:hour()
-  })
+  database.ref('/').update({
+    lastFed:hour()
+  });
 
   fill(255,255,254);
   textSize(15);
   if(lastFed >= 12){
-    text("Last Feed: ", + lastFed%12 + " PM",350,30);
+    text("Last Feed: " + lastFed%12 + " PM",350,30);
   }
   else if(lastFed === 0){
     text("Last Feed: 12 AM",350,30);
